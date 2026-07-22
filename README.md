@@ -14,6 +14,7 @@ A local PDF reader with AI-powered chat and insights. Upload PDFs, read them in 
 - **Suggested Questions** — Clickable tag-cloud prompts to get started quickly
 - **Markdown Rendering** — Chat responses and insights render formatted markdown
 - **Persistent Storage** — Uploaded files, summaries, and metadata survive Docker restarts via a named volume
+- **Fully Local** — All data stays on your machine. No cloud, no accounts, no tracking
 
 ## Prerequisites
 
