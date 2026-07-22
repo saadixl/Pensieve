@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import Markdown from "react-markdown";
 
 const API = "/api";
 
@@ -132,7 +133,15 @@ export default function ChatPanel({ fileId }) {
                 ...(m.role === "user" ? styles.userBubble : styles.assistantBubble),
               }}
             >
-              {m.content || (streaming && i === messages.length - 1 ? "..." : "")}
+              {m.role === "user" ? (
+                m.content
+              ) : m.content ? (
+                <div className="md-content">
+                  <Markdown>{m.content}</Markdown>
+                </div>
+              ) : (
+                streaming && i === messages.length - 1 ? "..." : ""
+              )}
             </div>
           </div>
         ))}
@@ -229,13 +238,13 @@ const styles = {
     borderRadius: 10,
     fontSize: 13,
     lineHeight: 1.5,
-    whiteSpace: "pre-wrap",
     wordBreak: "break-word",
   },
   userBubble: {
     background: "#2563eb",
     color: "#fff",
     borderBottomRightRadius: 2,
+    whiteSpace: "pre-wrap",
   },
   assistantBubble: {
     background: "#252525",
