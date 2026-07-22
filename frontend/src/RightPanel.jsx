@@ -2,12 +2,36 @@ import { useState } from "react";
 import InsightsPanel from "./InsightsPanel.jsx";
 import ChatPanel from "./ChatPanel.jsx";
 
-export default function RightPanel({ fileId }) {
+export default function RightPanel({ fileId, viewMode, onLayoutChange }) {
   const [insightsOpen, setInsightsOpen] = useState(true);
   const [chatOpen, setChatOpen] = useState(true);
 
   return (
     <div style={styles.wrapper}>
+      {viewMode === "minimized" && onLayoutChange && (
+        <div style={styles.layoutBar}>
+          <button
+            style={styles.layoutBtn}
+            onClick={() => onLayoutChange("split")}
+            title="Split view"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="1" y="1" width="5" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+              <rect x="8" y="1" width="5" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            </svg>
+          </button>
+          <button
+            style={styles.layoutBtn}
+            onClick={() => onLayoutChange("maximized")}
+            title="Maximize PDF"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <rect x="1" y="1" width="12" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            </svg>
+          </button>
+        </div>
+      )}
+
       <div style={{ ...styles.section, flex: insightsOpen ? 1 : "none" }}>
         <div
           style={styles.sectionHeader}
@@ -48,6 +72,27 @@ const styles = {
     height: "100%",
     borderLeft: "1px solid #2a2a2a",
     background: "#141414",
+  },
+  layoutBar: {
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "6px 14px",
+    background: "#1a1a1a",
+    borderBottom: "1px solid #2a2a2a",
+    flexShrink: 0,
+  },
+  layoutBtn: {
+    background: "transparent",
+    color: "#888",
+    border: "1px solid #444",
+    borderRadius: 4,
+    width: 26,
+    height: 26,
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   section: {
     display: "flex",

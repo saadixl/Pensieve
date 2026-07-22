@@ -11,6 +11,7 @@ export default function App() {
   const [uploading, setUploading] = useState(false);
   const [splitPercent, setSplitPercent] = useState(50);
   const [dragging, setDragging] = useState(false);
+  const [viewMode, setViewMode] = useState("split");
   const fileInput = useRef(null);
   const splitRef = useRef(null);
 
@@ -197,21 +198,47 @@ export default function App() {
         <div style={styles.content}>
           {activeTab ? (
             <div ref={splitRef} style={styles.splitView}>
-              <div style={{ ...styles.splitLeft, width: `${splitPercent}%` }}>
-                <PdfViewer
-                  key={activeTab}
-                  url={`${API}/files/${activeTab}/pdf`}
-                />
-              </div>
-              <div
-                style={styles.resizeHandle}
-                onMouseDown={() => setDragging(true)}
-              >
-                <div style={styles.resizeGrip} />
-              </div>
-              <div style={{ ...styles.splitRight, width: `calc(${100 - splitPercent}% - 6px)` }}>
-                <RightPanel key={`right-${activeTab}`} fileId={activeTab} />
-              </div>
+              {viewMode !== "minimized" && (
+                <div
+                  style={{
+                    ...styles.splitLeft,
+                    width: viewMode === "maximized" ? "100%" : `${splitPercent}%`,
+                  }}
+                >
+                  <PdfViewer
+                    key={activeTab}
+                    url={`${API}/files/${activeTab}/pdf`}
+                    viewMode={viewMode}
+                    onLayoutChange={setViewMode}
+                  />
+                </div>
+              )}
+              {viewMode === "split" && (
+                <div
+                  style={styles.resizeHandle}
+                  onMouseDown={() => setDragging(true)}
+                >
+                  <div style={styles.resizeGrip} />
+                </div>
+              )}
+              {viewMode !== "maximized" && (
+                <div
+                  style={{
+                    ...styles.splitRight,
+                    width:
+                      viewMode === "minimized"
+                        ? "100%"
+                        : `calc(${100 - splitPercent}% - 6px)`,
+                  }}
+                >
+                  <RightPanel
+                    key={`right-${activeTab}`}
+                    fileId={activeTab}
+                    viewMode={viewMode}
+                    onLayoutChange={setViewMode}
+                  />
+                </div>
+              )}
             </div>
           ) : (
             <div style={styles.placeholder}>

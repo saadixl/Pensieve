@@ -8,7 +8,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url,
 ).toString();
 
-export default function PdfViewer({ url }) {
+export default function PdfViewer({ url, viewMode, onLayoutChange }) {
   const [numPages, setNumPages] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [scale, setScale] = useState(1.2);
@@ -93,6 +93,48 @@ export default function PdfViewer({ url }) {
             +
           </button>
         </div>
+        {onLayoutChange && (
+          <div style={styles.toolbarGroup}>
+            <div style={styles.layoutDivider} />
+            <button
+              style={{
+                ...styles.layoutBtn,
+                ...(viewMode === "minimized" ? styles.layoutBtnActive : {}),
+              }}
+              onClick={() => onLayoutChange("minimized")}
+              title="Hide PDF"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <rect x="1" y="6" width="12" height="2" rx="0.5" fill="currentColor" />
+              </svg>
+            </button>
+            <button
+              style={{
+                ...styles.layoutBtn,
+                ...(viewMode === "split" ? styles.layoutBtnActive : {}),
+              }}
+              onClick={() => onLayoutChange("split")}
+              title="Split view"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <rect x="1" y="1" width="5" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                <rect x="8" y="1" width="5" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+              </svg>
+            </button>
+            <button
+              style={{
+                ...styles.layoutBtn,
+                ...(viewMode === "maximized" ? styles.layoutBtnActive : {}),
+              }}
+              onClick={() => onLayoutChange("maximized")}
+              title="Maximize PDF"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <rect x="1" y="1" width="12" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
 
       <div ref={containerRef} style={styles.scrollContainer}>
@@ -169,6 +211,29 @@ const styles = {
     color: "#ccc",
     minWidth: 44,
     textAlign: "center",
+  },
+  layoutDivider: {
+    width: 1,
+    height: 18,
+    background: "#444",
+    marginRight: 4,
+  },
+  layoutBtn: {
+    background: "transparent",
+    color: "#888",
+    border: "1px solid transparent",
+    borderRadius: 4,
+    width: 26,
+    height: 26,
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  layoutBtnActive: {
+    color: "#fff",
+    background: "#333",
+    borderColor: "#555",
   },
   scrollContainer: {
     flex: 1,
